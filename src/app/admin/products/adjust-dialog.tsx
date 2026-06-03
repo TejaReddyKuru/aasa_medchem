@@ -31,8 +31,8 @@ export function AdjustDialog({ product }: { product: any }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline" size="sm">Adjust Stock</Button>
+      <DialogTrigger render={<Button variant="outline" size="sm" />}>
+        Adjust
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

@@ -49,27 +49,23 @@
 
 @layer base {
   :root {
-    /* Workspace Baseline Canvas: #F8FAFC */
-    --background: 210 40% 98%;
-    /* Primary Typography Layer: #0F172A */
-    --foreground: 222 47% 11%;
+    /* Industrial Light Architecture */
+    --background: 210 40% 98%; /* #F8FAFC slate-50 */
+    --foreground: 222 47% 11%; /* #0F172A slate-900 */
     
-    /* Structured Surface Layers: #FFFFFF */
-    --card: 0 0% 100%;
+    --card: 0 0% 100%; /* #FFFFFF Pure White */
     --card-foreground: 222 47% 11%;
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
     
-    /* Action Accent Target: #2563EB */
-    --primary: 221 83% 53%;
+    --primary: 221 83% 53%; /* #2563EB blue-600 */
     --primary-foreground: 0 0% 100%;
     
     --secondary: 214 32% 91%;
     --secondary-foreground: 222 47% 11%;
     
     --muted: 214 32% 91%;
-    /* System Code / Numeric Fonts: #475569 */
-    --muted-foreground: 215 16% 47%;
+    --muted-foreground: 215 16% 47%; /* #475569 slate-600 */
     
     --accent: 214 32% 91%;
     --accent-foreground: 222 47% 11%;
@@ -77,46 +73,40 @@
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
     
-    /* Structural Dividing Rules: #E2E8F0 */
-    --border: 214 32% 91%;
+    --border: 214 32% 91%; /* #E2E8F0 slate-200 */
     --input: 214 32% 91%;
     --ring: 221 83% 53%;
     
-    --radius: 0.5rem;
+    --radius: 0.25rem; /* 4px strict radius */
   }
 
   .dark {
-    /* Workspace Baseline Canvas: #090B0F */
-    --background: 220 25% 5%;
-    /* Primary Typography Layer: #F1F5F9 */
-    --foreground: 210 40% 96%;
+    /* Premium Obsidian Dark Mode */
+    --background: 222 25% 6%; /* #090B0F True Tech Black */
+    --foreground: 210 40% 96%; /* #F1F5F9 slate-100 */
     
-    /* Structured Surface Layers: #0C0E12 */
-    --card: 220 20% 6%;
+    --card: 218 20% 9%; /* #0C0E12 Raised Dark Slate */
     --card-foreground: 210 40% 96%;
-    --popover: 220 20% 6%;
+    --popover: 218 20% 9%;
     --popover-foreground: 210 40% 96%;
     
-    /* Action Accent Target: #3B82F6 */
-    --primary: 217 91% 60%;
+    --primary: 217 91% 60%; /* #3B82F6 blue-500 */
     --primary-foreground: 0 0% 100%;
     
-    --secondary: 220 23% 10%;
+    --secondary: 215 28% 17%;
     --secondary-foreground: 210 40% 96%;
     
-    --muted: 220 23% 10%;
-    /* System Code / Numeric Fonts: #94A3B8 */
-    --muted-foreground: 215 28% 65%;
+    --muted: 215 28% 17%;
+    --muted-foreground: 215 20% 65%; /* #94A3B8 slate-400 */
     
-    --accent: 220 23% 10%;
+    --accent: 215 28% 17%;
     --accent-foreground: 210 40% 96%;
     
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
     
-    /* Structural Dividing Rules: #141820 */
-    --border: 220 23% 10%;
-    --input: 220 23% 10%;
+    --border: 217 23% 10%; /* #141820 Deep Iron Border */
+    --input: 217 23% 10%;
     --ring: 217 91% 60%;
   }
 }

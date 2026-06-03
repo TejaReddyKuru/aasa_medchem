@@ -27,7 +27,7 @@ export async function createProduct(prevState: string | undefined, formData: For
     const validatedData = ProductSchema.safeParse(rawData);
 
     if (!validatedData.success) {
-      return validatedData.error.errors[0].message;
+      return validatedData.error.issues[0].message;
     }
 
     const { sku, name, category, description, dimensionType, baseUnit, pricePerBaseUnit } = validatedData.data;
@@ -79,7 +79,7 @@ export async function updateProduct(productId: string, prevState: string | undef
     const validatedData = ProductSchema.safeParse(rawData);
 
     if (!validatedData.success) {
-      return validatedData.error.errors[0].message;
+      return validatedData.error.issues[0].message;
     }
 
     const { sku, name, category, description, dimensionType, baseUnit, pricePerBaseUnit } = validatedData.data;

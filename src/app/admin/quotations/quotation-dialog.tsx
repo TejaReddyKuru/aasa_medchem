@@ -12,8 +12,8 @@ export function AdminQuotationDialog({ quotation }: { quotation: any }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline" size="sm">View Details</Button>
+      <DialogTrigger render={<Button variant="outline" size="sm" />}>
+        View Details
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>

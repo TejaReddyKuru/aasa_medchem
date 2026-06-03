@@ -67,8 +67,8 @@ export function QuotationDialog({ product }: { product: ProductInfo }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button className="w-full mt-4">Request Quotation</Button>
+      <DialogTrigger render={<Button className="w-full mt-4" />}>
+        Request Quotation
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -90,7 +90,7 @@ export function QuotationDialog({ product }: { product: ProductInfo }) {
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="unit" className="text-right">Unit</Label>
-            <Select value={unit} onValueChange={setUnit}>
+            <Select value={unit} onValueChange={(val) => val && setUnit(val)}>
               <SelectTrigger className="col-span-2">
                 <SelectValue placeholder="Select unit" />
               </SelectTrigger>

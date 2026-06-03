@@ -48,12 +48,6 @@ export function LoginForm() {
               </div>
             )}
           </div>
-          
-          <div className="mt-4 text-center text-sm text-muted-foreground">
-            Test Accounts:<br/>
-            Admin: admin@example.com / password123<br/>
-            Seller: seller@example.com / password123
-          </div>
         </form>
       </CardContent>
       <CardFooter className="flex justify-center border-t p-4">

@@ -20,7 +20,7 @@ export async function registerSeller(
     const validatedData = RegisterSchema.safeParse(rawData);
 
     if (!validatedData.success) {
-      return validatedData.error.errors[0].message;
+      return validatedData.error.issues[0].message;
     }
 
     const { name, email, password } = validatedData.data;

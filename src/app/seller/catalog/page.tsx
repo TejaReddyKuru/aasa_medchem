@@ -42,8 +42,7 @@ export default async function SellerCatalog() {
               <p className="text-sm">{product.description}</p>
               
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Base Price:</span>
-                <span className="font-medium">{formatINR(product.pricePerBaseUnit)} / {product.baseUnit}</span>
+                <span className="font-medium">{formatINR(Number(product.pricePerBaseUnit))} / {product.baseUnit}</span>
               </div>
               
               <div className="flex justify-between text-sm">

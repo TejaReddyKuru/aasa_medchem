@@ -47,8 +47,8 @@ export function AdminOrderDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline" size="sm">Manage</Button>
+      <DialogTrigger render={<Button variant="outline" size="sm" />}>
+        Manage
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
@@ -101,7 +101,7 @@ export function AdminOrderDialog({
 
           <div className="space-y-2">
             <label className="text-sm font-medium">Change Order Status</label>
-            <Select value={status} onValueChange={setStatus}>
+            <Select value={status} onValueChange={(val) => val && setStatus(val)}>
               <SelectTrigger>
                 <SelectValue placeholder="Select status" />
               </SelectTrigger>

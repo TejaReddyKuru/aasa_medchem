@@ -19,10 +19,10 @@ export async function approveQuotation(quotationId: string) {
   if (quotation.status !== 'GENERATED') throw new Error('Only GENERATED quotations can be approved');
 
   await prisma.$transaction(async (tx) => {
-    // We update the quotation to be APPROVED
+    // We update the quotation to be ACCEPTED
     await tx.quotation.update({
       where: { id: quotationId },
-      data: { status: 'APPROVED' },
+      data: { status: 'ACCEPTED' },
     });
 
     await tx.auditLog.create({
