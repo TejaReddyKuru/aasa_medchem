@@ -1,6 +1,8 @@
+import { NextResponse } from 'next/server';
 import type { NextAuthConfig } from 'next-auth';
 
 export const authConfig = {
+  trustHost: true,
   pages: {
     signIn: '/login',
   },
@@ -15,9 +17,9 @@ export const authConfig = {
       } else if (isLoggedIn && (nextUrl.pathname === '/login' || nextUrl.pathname === '/register')) {
         // Redirect based on role
         if (auth.user?.role === 'ADMIN') {
-          return Response.redirect(new URL('/admin/dashboard', nextUrl));
+          return NextResponse.redirect(new URL('/admin/dashboard', nextUrl));
         } else {
-          return Response.redirect(new URL('/seller/dashboard', nextUrl));
+          return NextResponse.redirect(new URL('/seller/dashboard', nextUrl));
         }
       }
       return true;
