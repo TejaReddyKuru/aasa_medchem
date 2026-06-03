@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { formatINR } from '@/lib/utils/conversions';
-import { convertToOrder } from './actions';
+import { PlaceOrderButton } from './place-order-button';
 
 export default async function SellerQuotations() {
   const session = await auth();
@@ -53,12 +53,7 @@ export default async function SellerQuotations() {
                   </TableCell>
                   <TableCell>
                     {quo.status === 'GENERATED' && (
-                      <form action={async () => {
-                        'use server';
-                        await convertToOrder(quo.id);
-                      }}>
-                        <Button size="sm">Place Order</Button>
-                      </form>
+                      <PlaceOrderButton quotationId={quo.id} />
                     )}
                   </TableCell>
                 </TableRow>

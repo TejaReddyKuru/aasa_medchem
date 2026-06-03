@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { adjustInventory } from './actions';
+import { adjustInventory } from './inventory-actions';
 
 export function AdjustDialog({ product }: { product: any }) {
   const [open, setOpen] = useState(false);

@@ -24,9 +24,8 @@ export default async function AdminLayout({
             Admin Dashboard
           </Link>
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-            <Link href="/admin/products" className="text-muted-foreground hover:text-foreground">Products</Link>
-            <Link href="/admin/inventory" className="text-muted-foreground hover:text-foreground">Inventory</Link>
-            <Link href="/admin/quotations" className="text-muted-foreground hover:text-foreground">Quotations</Link>
+            <Link href="/admin/dashboard" className="text-muted-foreground hover:text-foreground">Dashboard</Link>
+            <Link href="/admin/products" className="text-muted-foreground hover:text-foreground">Products & Inventory</Link>
             <Link href="/admin/orders" className="text-muted-foreground hover:text-foreground">Orders</Link>
           </nav>
         </div>

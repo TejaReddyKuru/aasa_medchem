@@ -4,10 +4,10 @@ import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
 import { revalidatePath } from 'next/cache';
 import Decimal from 'decimal.js';
-import { sendOrderApprovalEmail } from '@/lib/utils/email';
+import { sendOrderStatusEmail } from '@/lib/utils/email';
 import { formatINR } from '@/lib/utils/conversions';
 
-export async function approveOrder(orderId: string) {
+export async function updateOrderStatus(orderId: string, newStatus: string) {
   const session = await auth();
   if (!session || session.user?.role !== 'ADMIN') throw new Error('Unauthorized');
 
@@ -17,84 +17,82 @@ export async function approveOrder(orderId: string) {
   });
 
   if (!order) throw new Error('Order not found');
-  if (order.status !== 'PENDING_APPROVAL') throw new Error('Invalid order status');
 
-  await prisma.$transaction(async (tx) => {
-    // 1. Verify stock and decrement for each item
-    for (const item of order.items) {
-      const product = await tx.product.findUnique({ where: { id: item.productId } });
-      if (!product) throw new Error(`Product ${item.productId} not found`);
+  // If status is unchanged, do nothing
+  if (order.status === newStatus) return;
 
-      if (new Decimal(product.inventoryQuantity).lt(item.convertedQuantity)) {
-        throw new Error(`Insufficient stock for product ${product.name}`);
+  // If changing TO PROCESSING, perform strict inventory validation and deduction
+  if (newStatus === 'PROCESSING' && order.status !== 'PROCESSING') {
+    await prisma.$transaction(async (tx) => {
+      for (const item of order.items) {
+        const product = await tx.product.findUnique({ where: { id: item.productId } });
+        if (!product) throw new Error(`Product ${item.productId} not found`);
+
+        if (new Decimal(product.inventoryQuantity).lt(item.convertedQuantity)) {
+          throw new Error(`Insufficient inventory available to process this order. Required: ${item.convertedQuantity.toString()}, Available: ${product.inventoryQuantity.toString()}`);
+        }
+
+        await tx.product.update({
+          where: { id: product.id },
+          data: {
+            inventoryQuantity: { decrement: item.convertedQuantity },
+          },
+        });
+
+        await tx.inventoryTransaction.create({
+          data: {
+            productId: product.id,
+            quantity: item.convertedQuantity,
+            transactionType: 'ORDER_FULFILLMENT',
+            remarks: `Fulfilled for Order ${order.orderNumber}`,
+          }
+        });
       }
 
-      await tx.product.update({
-        where: { id: product.id },
+      await tx.order.update({
+        where: { id: orderId },
+        data: { status: 'PROCESSING' },
+      });
+
+      await tx.auditLog.create({
         data: {
-          inventoryQuantity: { decrement: item.convertedQuantity },
+          userId: session.user.id,
+          action: 'Order status changed to PROCESSING (Inventory Deducted)',
+          entityType: 'Order',
+          entityId: order.id,
         },
       });
-
-      // 2. Create Inventory Transaction Log
-      await tx.inventoryTransaction.create({
-        data: {
-          productId: product.id,
-          quantity: item.convertedQuantity,
-          transactionType: 'ORDER_FULFILLMENT',
-          remarks: `Fulfilled for Order ${order.orderNumber}`,
-        }
+    });
+  } else {
+    // Standard status update without inventory impact
+    await prisma.$transaction(async (tx) => {
+      await tx.order.update({
+        where: { id: orderId },
+        data: { status: newStatus as any },
       });
-    }
 
-    // 3. Mark order as APPROVED
-    await tx.order.update({
-      where: { id: orderId },
-      data: { status: 'APPROVED' },
+      await tx.auditLog.create({
+        data: {
+          userId: session.user.id,
+          action: `Order status changed to ${newStatus}`,
+          entityType: 'Order',
+          entityId: order.id,
+        },
+      });
     });
+  }
 
-    // 4. Audit Log
-    await tx.auditLog.create({
-      data: {
-        userId: session.user.id,
-        action: 'Order Approved',
-        entityType: 'Order',
-        entityId: order.id,
-      },
-    });
-  });
-
-  // 5. Send asynchronous email notification (don't await/block on it)
-  sendOrderApprovalEmail(
+  // Dispatch email
+  sendOrderStatusEmail(
     order.user.email,
     order.user.name || 'Seller',
     order.orderNumber,
-    formatINR(order.totalAmount)
+    formatINR(order.totalAmount),
+    newStatus,
+    order.items
   ).catch(e => console.error("Non-fatal email error:", e));
 
   revalidatePath('/admin/orders');
   revalidatePath('/admin/inventory');
-}
-
-export async function rejectOrder(orderId: string) {
-  const session = await auth();
-  if (!session || session.user?.role !== 'ADMIN') throw new Error('Unauthorized');
-
-  await prisma.$transaction(async (tx) => {
-    const order = await tx.order.update({
-      where: { id: orderId },
-      data: { status: 'REJECTED' },
-    });
-
-    await tx.auditLog.create({
-      data: {
-        userId: session.user.id,
-        action: 'Order Rejected',
-        entityType: 'Order',
-        entityId: order.id,
-      },
-    });
-  });
-
-  revalidatePath('/admin/orders');
+  revalidatePath('/seller/orders');
 }

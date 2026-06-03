@@ -14,7 +14,7 @@ export default async function SellerDashboard() {
     productsAvailable,
   ] = await Promise.all([
     prisma.quotation.count({ where: { userId: session.user.id } }),
-    prisma.order.count({ where: { userId: session.user.id, status: 'APPROVED' } }),
+    prisma.order.count({ where: { userId: session.user.id, status: { in: ['PROCESSING', 'SHIPPED', 'DELIVERED'] } } }),
     prisma.product.count({ where: { isDeleted: false } }),
   ]);
 

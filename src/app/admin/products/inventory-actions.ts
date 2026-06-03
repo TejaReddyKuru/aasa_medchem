@@ -54,7 +54,7 @@ export async function adjustInventory(
     });
   });
 
-  revalidatePath('/admin/inventory');
+  revalidatePath('/admin/products');
   revalidatePath('/admin/dashboard');
   revalidatePath('/seller/catalog');
 }

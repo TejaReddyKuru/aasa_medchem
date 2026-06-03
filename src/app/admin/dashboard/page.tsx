@@ -18,7 +18,7 @@ export default async function AdminDashboard() {
         inventoryQuantity: { lte: prisma.product.fields.minimumStockLevel }
       } 
     }),
-    prisma.order.count({ where: { status: 'PENDING_APPROVAL' } }),
+    prisma.order.count({ where: { status: 'ORDER_PLACED' } }),
     prisma.product.findMany({ where: { isDeleted: false } }),
   ]);
 

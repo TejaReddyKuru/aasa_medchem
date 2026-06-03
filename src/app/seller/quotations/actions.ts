@@ -30,7 +30,7 @@ export async function convertToOrder(quotationId: string) {
         orderNumber: `ORD-${Date.now()}`,
         userId: session.user.id,
         quotationId: quotation.id,
-        status: 'PENDING_APPROVAL',
+        status: 'ORDER_PLACED',
         totalAmount: quotation.totalAmount,
         items: {
           create: quotation.items.map((item) => ({
