@@ -100,8 +100,9 @@ The `seed.ts` script automatically provisions the following accounts:
 
 *(Placeholders for UI Screenshots)*
 <img width="1620" height="868" alt="image" src="https://github.com/user-attachments/assets/bceb17ad-178f-46bd-81d9-635018c8587b" />
+<img width="1919" height="929" alt="image" src="https://github.com/user-attachments/assets/7288c1de-649a-44b8-ba30-c65d13bf583f" />
+<img width="1919" height="923" alt="image" src="https://github.com/user-attachments/assets/a61f59c0-be16-4023-a3b0-eeccc458cb62" />
 
-- [Order Approval]
 
 ## Engineering Tradeoffs
 1. **Decimal vs Float**: Chosen `decimal.js` and `NUMERIC(20,8)`. Tradeoff: Slight performance overhead for extreme monetary accuracy. Worth it for enterprise grade B2B commerce.
