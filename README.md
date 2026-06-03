@@ -99,8 +99,8 @@ The `seed.ts` script automatically provisions the following accounts:
 ## Screenshots
 
 *(Placeholders for UI Screenshots)*
-- [Admin Dashboard]
-- [Quotation Engine]
+<img width="1620" height="868" alt="image" src="https://github.com/user-attachments/assets/bceb17ad-178f-46bd-81d9-635018c8587b" />
+
 - [Order Approval]
 
 ## Engineering Tradeoffs
