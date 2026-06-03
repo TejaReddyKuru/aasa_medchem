@@ -1,0 +1,148 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  SELLER
+}
+
+enum DimensionType {
+  WEIGHT
+  VOLUME
+  COUNT
+}
+
+enum TransactionType {
+  STOCK_IN
+  STOCK_OUT
+  ORDER_FULFILLMENT
+}
+
+enum QuotationStatus {
+  DRAFT
+  GENERATED
+  CONVERTED_TO_ORDER
+  REJECTED
+}
+
+enum OrderStatus {
+  PENDING_APPROVAL
+  APPROVED
+  REJECTED
+  COMPLETED
+}
+
+model User {
+  id           String      @id @default(cuid())
+  name         String
+  email        String      @unique
+  passwordHash String
+  role         Role        @default(SELLER)
+  createdAt    DateTime    @default(now())
+  quotations   Quotation[]
+  orders       Order[]
+  auditLogs    AuditLog[]
+}
+
+model Product {
+  id                 String                 @id @default(cuid())
+  sku                String                 @unique
+  name               String
+  category           String
+  description        String?
+  dimensionType      DimensionType
+  baseUnit           String                 // 'g', 'mL', 'item'
+  pricePerBaseUnit   Decimal                @db.Decimal(20,8)
+  inventoryQuantity  Decimal                @db.Decimal(20,8)
+  minimumStockLevel  Decimal                @db.Decimal(20,8)
+  isDeleted          Boolean                @default(false)
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
+  
+  transactions       InventoryTransaction[]
+  quotationItems     QuotationItem[]
+  orderItems         OrderItem[]
+}
+
+model InventoryTransaction {
+  id              String          @id @default(cuid())
+  productId       String
+  product         Product         @relation(fields: [productId], references: [id])
+  quantity        Decimal         @db.Decimal(20,8)
+  transactionType TransactionType
+  remarks         String?
+  createdAt       DateTime        @default(now())
+}
+
+model Quotation {
+  id              String          @id @default(cuid())
+  quotationNumber String          @unique
+  userId          String
+  user            User            @relation(fields: [userId], references: [id])
+  status          QuotationStatus @default(DRAFT)
+  totalAmount     Decimal         @db.Decimal(20,8)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  
+  items           QuotationItem[]
+  orders          Order[]
+}
+
+model QuotationItem {
+  id                String    @id @default(cuid())
+  quotationId       String
+  quotation         Quotation @relation(fields: [quotationId], references: [id])
+  productId         String
+  product           Product   @relation(fields: [productId], references: [id])
+  
+  requestedQuantity Decimal   @db.Decimal(20,8)
+  requestedUnit     String
+  convertedQuantity Decimal   @db.Decimal(20,8)
+  unitPrice         Decimal   @db.Decimal(20,8)
+  subtotal          Decimal   @db.Decimal(20,8)
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  orderNumber     String      @unique
+  userId          String
+  user            User        @relation(fields: [userId], references: [id])
+  quotationId     String?
+  quotation       Quotation?  @relation(fields: [quotationId], references: [id])
+  status          OrderStatus @default(PENDING_APPROVAL)
+  totalAmount     Decimal     @db.Decimal(20,8)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  
+  items           OrderItem[]
+}
+
+model OrderItem {
+  id                String  @id @default(cuid())
+  orderId           String
+  order             Order   @relation(fields: [orderId], references: [id])
+  productId         String
+  product           Product @relation(fields: [productId], references: [id])
+  
+  orderedQuantity   Decimal @db.Decimal(20,8)
+  orderedUnit       String  
+  convertedQuantity Decimal @db.Decimal(20,8) 
+  unitPrice         Decimal @db.Decimal(20,8) 
+  subtotal          Decimal @db.Decimal(20,8)
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  action     String
+  entityType String
+  entityId   String
+  createdAt  DateTime @default(now())
+}
